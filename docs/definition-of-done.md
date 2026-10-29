@@ -97,5 +97,13 @@ Each entry gives the item, why it was not reached, and what state it was left in
 - **MO-1 target:** missed. Run 1 was 108.7 ms. A trial index (runs 2 and 3) halved the time of the count
   itself but did not move the request median, so it was rolled back. The OPA call and the second task load
   were not measured or changed (`objectives.md`, MO-1 runs 2 and 3).
+- **Update at 19:27 for items 8 and 9:** after all they were built on the side branches, from 18:30.
+  - The backend (`f6aefd823`, `a078d3643` on `label-counts-backend`) is a signed ticket endpoint, Redis
+    publishing after annotation saves, and a WebSocket route in `cvat/asgi.py`. It was checked end to end with a
+    test client inside the server container.
+  - The frontend (`6f04bf610`, `f8982caa7` on `label-counts-frontend`) is a reconnecting hook and a Live tag.
+    It was never seen working in a browser: the dev server cannot proxy WebSockets, and the production build
+    did not finish in time.
+  - So none of it is in `dev-test01`, and the two items stay unticked.
 - **Python formatting:** black and isort are not installed in this environment, so the Python files were
   formatted by hand to the repository's 100-character limit and not checked by the tools.

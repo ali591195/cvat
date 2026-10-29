@@ -91,6 +91,7 @@ direction goes under "Changes to this plan" with the time and the reason. The or
 | 17:54 | 7 | done | MO-1 run 1: median 108.7 ms, target 100 ms missed by 8.7 ms |
 | 18:14 | 8 | done | Job filter: the 10 job totals add up to the task total (41,866); the page has a job Select |
 | 18:14 | 9 | skipped | Live updates and reconnect not started, see the 18:12 change |
+| 19:27 | 9 | not merged | Built on the side branches and the backend tested, but not tested in a browser; see the 19:27 change |
 
 ## 7. Changes to this plan (added, never rewritten)
 
@@ -121,6 +122,11 @@ direction goes under "Changes to this plan" with the time and the reason. The or
   1.5 h before the freeze, which leaves room for them. They are merged into `dev-test01` only if they work
   end to end by 20:00. Otherwise the 18:12 decision stands and nothing of them is merged. The recording is
   done by 21:30 either way, because a power cut is possible this evening.
+- 19:27: Live updates are **not merged**. The backend part works end to end: a test client received the change
+  notification after a real annotation save. But the browser test needed a production build of cvat-ui, which
+  was still running after 36 minutes and taking most of the machine's memory at the time the recording had to
+  start. So the 18:12 outcome stands for `dev-test01`. The work stays on the `label-counts-backend` and
+  `label-counts-frontend` branches.
 
 ## 8. Decision record
 
