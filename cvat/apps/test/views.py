@@ -4,6 +4,7 @@
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
@@ -12,8 +13,14 @@ from cvat.apps.engine.types import ExtendedRequest
 from cvat.utils import django_database as db_utils
 
 from .counts import count_annotations_by_label
+from .live import TICKET_MAX_AGE, make_ticket
 from .permissions import LabelCountsPermission
-from .serializers import LabelCountsQuerySerializer, LabelCountsSerializer
+from .serializers import (
+    LabelCountsQuerySerializer,
+    LabelCountsSerializer,
+    LabelCountsTicketQuerySerializer,
+    LabelCountsTicketSerializer,
+)
 
 
 @extend_schema(tags=["label-counts"])
@@ -53,3 +60,23 @@ class LabelCountsViewSet(viewsets.ViewSet):
             }
         )
         return Response(response.data)
+
+    @extend_schema(
+        summary="Get a ticket to open the live label counts WebSocket for a task",
+        description=(
+            "Connect to WS /api/label-counts/live?ticket=<ticket> to be told "
+            "when annotations of the task change."
+        ),
+        parameters=[LabelCountsTicketQuerySerializer],
+        responses={"200": LabelCountsTicketSerializer},
+    )
+    @action(detail=False, methods=["GET"], url_path="live-ticket")
+    def live_ticket(self, request: ExtendedRequest):
+        query = LabelCountsTicketQuerySerializer(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        task_id = query.validated_data["task_id"]
+
+        ticket = LabelCountsTicketSerializer(
+            {"ticket": make_ticket(request.user.id, task_id), "expires_in": TICKET_MAX_AGE}
+        )
+        return Response(ticket.data)

@@ -24,3 +24,12 @@ class LabelCountsSerializer(serializers.Serializer):
     job_id = serializers.IntegerField(allow_null=True)
     total = serializers.IntegerField()
     labels = LabelCountSerializer(many=True)
+
+
+class LabelCountsTicketQuerySerializer(serializers.Serializer):
+    task_id = serializers.IntegerField(help_text="A task to listen to")
+
+
+class LabelCountsTicketSerializer(serializers.Serializer):
+    ticket = serializers.CharField(help_text="A signed value to pass to the live WebSocket")
+    expires_in = serializers.IntegerField(help_text="Seconds the ticket can be used for")
