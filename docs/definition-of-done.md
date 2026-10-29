@@ -58,7 +58,9 @@ evidence.
 
 ## Stretch (items 8-10)
 
-- [ ] 8. Adding or deleting a box in a job updates the graph without a reload. Evidence:
+- [x] 8. Adding or deleting a box in a job updates the graph without a reload. Evidence: 20:14, Task 1's page open in Chrome on :3000 with the Live tag green.
+      A rectangle added to job 1 through the API made the shown total go from 41866 to 41867 without a reload,
+      and deleting it at 20:16 brought the API total back to 41866.
 - [x] 8. MO-3 measured, or skipped with the reason. Evidence: skipped, because item 8 was not built (see "Not done").
 - [ ] 9. After the server is stopped and started again, the page shows that it is reconnecting, then recovers and
       refetches. Evidence:
@@ -113,5 +115,7 @@ Each entry gives the item, why it was not reached, and what state it was left in
     the existing endpoints answer exactly as before.
   - **Not tested:** the page going from Reconnecting back to Live in a real browser, and the chart refreshing
     there after a save. So the item 8 and 9 lines stay unticked, and MO-3 is not measured.
+  - **Update at 20:16:** the browser refresh after a save was then checked and item 8 is ticked. Item 9, the
+    browser reconnect after a server restart, is still untested, and MO-3 is still not measured.
 - **Python formatting:** black and isort are not installed in this environment, so the Python files were
   formatted by hand to the repository's 100-character limit and not checked by the tools.

@@ -93,6 +93,7 @@ direction goes under "Changes to this plan" with the time and the reason. The or
 | 18:14 | 9 | skipped | Live updates and reconnect not started, see the 18:12 change |
 | 19:27 | 9 | not merged | Built on the side branches and the backend tested, but not tested in a browser; see the 19:27 change |
 | 19:51 | 9 | merged | Live updates merged; regression check and 28 tests pass; browser test still missing |
+| 20:14 | 9 | item 8 done | In Chrome the Live tag is green and the total changes without a reload after a save; reconnect not tested |
 
 ## 7. Changes to this plan (added, never rewritten)
 
