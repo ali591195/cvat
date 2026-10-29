@@ -17,7 +17,8 @@ import {
     SerializedRegister, SerializedJob, SerializedGuide, SerializedAsset, SerializedAPISchema,
     SerializedInvitationData, SerializedCloudStorage, SerializedFramesMetaData, SerializedCollection,
     SerializedRequest, SerializedJobValidationLayout, SerializedTaskValidationLayout, SerializedConsensusSettingsData,
-    SerializedApiToken, SerializedUserGrowthData,
+    SerializedApiToken, SerializedUserGrowthData, SerializedLabelCounts,
+    SerializedLabelCountsLiveTicket,
 } from './server-response-types';
 import {
     SerializedQualityConflictData, SerializedQualityReportData,
@@ -2560,6 +2561,28 @@ async function getQualitySettings(
     return response.data.results;
 }
 
+async function getLabelCounts(params: { task_id: number; job_id?: number }): Promise<SerializedLabelCounts> {
+    const { backendAPI } = config;
+
+    try {
+        const response = await Axios.get(`${backendAPI}/label-counts`, { params });
+        return response.data;
+    } catch (errorData) {
+        throw generateError(errorData);
+    }
+}
+
+async function getLabelCountsLiveTicket(params: { task_id: number }): Promise<SerializedLabelCountsLiveTicket> {
+    const { backendAPI } = config;
+
+    try {
+        const response = await Axios.get(`${backendAPI}/label-counts/live-ticket`, { params });
+        return response.data;
+    } catch (errorData) {
+        throw generateError(errorData);
+    }
+}
+
 async function updateQualitySettings(
     settingsID: number,
     settingsData: SerializedQualitySettingsSaveData,
@@ -2912,6 +2935,10 @@ export default Object.freeze({
     }),
 
     analytics: Object.freeze({
+        labelCounts: Object.freeze({
+            get: getLabelCounts,
+            liveTicket: getLabelCountsLiveTicket,
+        }),
         quality: Object.freeze({
             reports: getQualityReports,
             conflicts: getQualityConflicts,

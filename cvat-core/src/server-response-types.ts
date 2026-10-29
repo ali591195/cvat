@@ -462,6 +462,23 @@ export interface SerializedFunctionRequest {
     };
 }
 
+export interface SerializedLabelCounts {
+    task_id: number;
+    job_id: number | null;
+    total: number;
+    labels: {
+        id: number;
+        name: string;
+        color: string;
+        count: number;
+    }[];
+}
+
+export interface SerializedLabelCountsLiveTicket {
+    ticket: string;
+    expires_in: number;
+}
+
 export interface SerializedJobValidationLayout {
     honeypot_count?: number;
     honeypot_frames?: number[];

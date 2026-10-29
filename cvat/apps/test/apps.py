@@ -1,0 +1,12 @@
+# Copyright (C) CVAT.ai Corporation
+#
+# SPDX-License-Identifier: MIT
+
+from django.apps import AppConfig
+
+
+class TestAppConfig(AppConfig):
+    name = "cvat.apps.test"
+
+    def ready(self):
+        from . import signals  # pylint: disable=unused-import

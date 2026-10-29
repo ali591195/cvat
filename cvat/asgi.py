@@ -17,6 +17,7 @@ from django.core.asgi import get_asgi_application
 from django.core.handlers.asgi import ASGIHandler
 
 import cvat.utils.remote_debugger as debug
+from cvat.apps.test.live import live_label_counts
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cvat.settings.development")
 
@@ -39,3 +40,13 @@ if debug.is_debugging_enabled():
             return await super().handle(*args, **kwargs)
 
     application = DebuggerApp()
+
+
+django_application = application
+
+
+async def application(scope, receive, send):
+    if scope["type"] == "websocket" and scope["path"] == "/api/label-counts/live":
+        await live_label_counts(scope, receive, send)
+    else:
+        await django_application(scope, receive, send)
