@@ -82,7 +82,8 @@ evidence.
       app `cvat/apps/test`, one line each in `cvat/settings/base.py` and `cvat/urls.py`, 5 cvat-core files, the new
       `label-counts-page` folder, and one line each in `cvat-app.tsx` and `actions-menu-items.tsx`. A grep for
       print, console.log, TODO and commented-out code in the new code finds nothing.
-- [ ] The PR goes from `dev-test01` into my own fork, not the CVAT repository. Evidence:
+- [x] The PR goes from `dev-test01` into my own fork, not the CVAT repository. Evidence: https://github.com/ali591195/cvat/pull/1 (`dev-test01` into `develop` of
+      `ali591195/cvat`). A first PR was opened on `cvat-ai/cvat` by mistake (#11400) and closed straight away.
 
 ## Not done (added at the end)
 
@@ -105,5 +106,12 @@ Each entry gives the item, why it was not reached, and what state it was left in
     It was never seen working in a browser: the dev server cannot proxy WebSockets, and the production build
     did not finish in time.
   - So none of it is in `dev-test01`, and the two items stay unticked.
+- **Update at 19:51 for items 8 and 9:** merged into `dev-test01` (`b08a90dc8`, `1ec0d80c9`).
+  - **Tested:** a WebSocket client inside the server container received `{"type": "changed", "task_id": 1}`
+    after a real annotation save. A forged ticket is closed with 4401 and a valid one connects through Traefik and
+    nginx. The ticket endpoint gives 401 and 403 like the counts endpoint. The full suite passes (28 tests), and
+    the existing endpoints answer exactly as before.
+  - **Not tested:** the page going from Reconnecting back to Live in a real browser, and the chart refreshing
+    there after a save. So the item 8 and 9 lines stay unticked, and MO-3 is not measured.
 - **Python formatting:** black and isort are not installed in this environment, so the Python files were
   formatted by hand to the repository's 100-character limit and not checked by the tools.

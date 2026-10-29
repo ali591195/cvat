@@ -92,6 +92,7 @@ direction goes under "Changes to this plan" with the time and the reason. The or
 | 18:14 | 8 | done | Job filter: the 10 job totals add up to the task total (41,866); the page has a job Select |
 | 18:14 | 9 | skipped | Live updates and reconnect not started, see the 18:12 change |
 | 19:27 | 9 | not merged | Built on the side branches and the backend tested, but not tested in a browser; see the 19:27 change |
+| 19:51 | 9 | merged | Live updates merged; regression check and 28 tests pass; browser test still missing |
 
 ## 7. Changes to this plan (added, never rewritten)
 
@@ -127,6 +128,12 @@ direction goes under "Changes to this plan" with the time and the reason. The or
   was still running after 36 minutes and taking most of the machine's memory at the time the recording had to
   start. So the 18:12 outcome stands for `dev-test01`. The work stays on the `label-counts-backend` and
   `label-counts-frontend` branches.
+- 19:45: Live updates are **merged after all**, without the browser test. Why: the code was written and reviewed,
+  and a check after the merge showed it breaks nothing that worked before. All 28 tests pass; the endpoint
+  still gives 401, 41,866 over 80 labels, 4,437 for job 3 and 403 for a user without access; CVAT's own task and
+  annotation endpoints still answer 200. The WebSocket route accepts a valid ticket and closes a bad one with
+  4401. What is not tested is stated in the Definition of Done. One line in `cvat-ui/webpack.config.js`
+  (`ws: true`) lets the UI dev server forward the WebSocket, which it did not do before.
 
 ## 8. Decision record
 
