@@ -79,7 +79,7 @@ next to later ones.
 |----|--------|--------|------|----------|
 | MO-1 | median ≤ 100 ms | run 1: 108.7 ms (101.1-335.0); runs 2 and 3, with a trial index: 127.3 ms and 111.7 ms | Missed | Measurement log, MO-1 runs 1-3 |
 | MO-2 | 0 differing labels | 0 of 80 against the shapes CVAT stores; 77 of 80 against raw COCO instances | Met for stored shapes (see run 1) | Measurement log, MO-2 run 1 |
-| MO-3 | median ≤ 2 s | | | |
+| MO-3 | median ≤ 2 s | Not measured | Not measured | Live updates were merged at 19:51 and seen working in a browser at 20:14, with no time left for 5 timed runs |
 
 ## Measurement log (added, never rewritten)
 

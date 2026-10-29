@@ -62,6 +62,8 @@ evidence.
       A rectangle added to job 1 through the API made the shown total go from 41866 to 41867 without a reload,
       and deleting it at 20:16 brought the API total back to 41866.
 - [x] 8. MO-3 measured, or skipped with the reason. Evidence: skipped, because item 8 was not built (see "Not done").
+      Update 20:20: item 8 was built and merged later. MO-3 is still not measured, because after the browser check at
+      20:14 the remaining time went to the recording.
 - [ ] 9. After the server is stopped and started again, the page shows that it is reconnecting, then recovers and
       refetches. Evidence:
 - [x] 10. Decision record written in `plan.md`. Evidence: `plan.md`, section 8.
