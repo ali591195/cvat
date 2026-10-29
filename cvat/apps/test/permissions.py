@@ -41,7 +41,7 @@ class LabelCountsPermission(OpenPolicyAgentPermission):
 
     @classmethod
     def _get_scopes(cls, request, view, obj):
-        return [{"list": cls.Scopes.LIST}[view.action]]
+        return [{"list": cls.Scopes.LIST, "live_ticket": cls.Scopes.LIST}[view.action]]
 
     def get_resource(self):
         raise NotImplementedError("This permission is only a wrapper around TaskPermission")

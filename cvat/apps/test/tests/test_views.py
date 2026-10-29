@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase
 from cvat.apps.engine import models
 from cvat.apps.engine.tests.utils import ForceLogin
 from cvat.apps.iam.models import User
+from cvat.apps.test.live import TICKET_MAX_AGE, read_ticket
 
 URL = "/api/label-counts"
 
@@ -105,3 +106,30 @@ class LabelCountsViewTest(APITestCase):
         response = self._get(self.owner, task_id=self.task.id, job_id="abc")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def _get_ticket(self, user, **params):
+        with ForceLogin(user, self.client):
+            return self.client.get(f"{URL}/live-ticket", params)
+
+    def test_anonymous_user_gets_401_for_live_ticket(self):
+        response = self._get_ticket(None, task_id=self.task.id)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_without_access_gets_403_for_live_ticket(self):
+        response = self._get_ticket(self.other, task_id=self.task.id)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_owner_gets_ticket_for_the_task(self):
+        response = self._get_ticket(self.owner, task_id=self.task.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.json()["expires_in"], TICKET_MAX_AGE)
+        self.assertEqual(
+            read_ticket(response.json()["ticket"]),
+            {"user_id": self.owner.id, "task_id": self.task.id},
+        )
+
+    def test_forged_ticket_is_rejected(self):
+        self.assertIsNone(read_ticket("not-a-ticket"))
