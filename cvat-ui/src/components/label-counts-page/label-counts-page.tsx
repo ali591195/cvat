@@ -6,6 +6,7 @@ import './styles.scss';
 
 import React, { useState, useEffect } from 'react';
 import Button from 'antd/lib/button';
+import Tag from 'antd/lib/tag';
 import Empty from 'antd/lib/empty';
 import Result from 'antd/lib/result';
 import Title from 'antd/lib/typography/Title';
@@ -20,10 +21,17 @@ import CVATLoadingSpinner from 'components/common/loading-spinner';
 import ResourceLink from 'components/common/resource-link';
 import LabelCountsChart from './label-counts-chart';
 import JobFilter from './job-filter';
+import useLiveLabelCounts, { LiveStatus } from './use-live-label-counts';
 
 const core = getCore();
 
 const UNREACHABLE_SERVER_MESSAGE = 'The server could not be reached. Check that CVAT is running and try again.';
+
+const LIVE_STATUS_TEXT: Record<LiveStatus, string> = {
+    connecting: 'Connecting…',
+    live: 'Live',
+    reconnecting: 'Reconnecting…',
+};
 
 type LabelCounts = Awaited<ReturnType<typeof core.analytics.labelCounts.get>>;
 
@@ -35,10 +43,12 @@ function LabelCountsPage(): JSX.Element {
     const [error, setError] = useState<Error | null>(null);
     const [jobId, setJobId] = useState<number | undefined>(undefined);
 
-    const fetchData = async (): Promise<void> => {
-        setFetching(true);
-        setError(null);
-        setLabelCounts(null);
+    const fetchData = async (silent = false): Promise<void> => {
+        if (!silent) {
+            setFetching(true);
+            setError(null);
+            setLabelCounts(null);
+        }
         try {
             const [[fetchedTask], fetchedCounts] = await Promise.all([
                 core.tasks.get({ id: taskId }),
@@ -46,12 +56,15 @@ function LabelCountsPage(): JSX.Element {
             ]);
             setTask(fetchedTask);
             setLabelCounts(fetchedCounts);
+            setError(null);
         } catch (err: unknown) {
             setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
             setFetching(false);
         }
     };
+
+    const liveStatus = useLiveLabelCounts(taskId, () => fetchData(true));
 
     useEffect(() => {
         if (Number.isInteger(taskId)) {
@@ -86,6 +99,12 @@ function LabelCountsPage(): JSX.Element {
                                 { !fetching && labelCounts && labelCounts.total > 0 && (
                                     <Text strong>{`Total: ${labelCounts.total} annotations`}</Text>
                                 )}
+                                <Tag
+                                    className='cvat-label-counts-live-status'
+                                    color={liveStatus === 'live' ? 'green' : 'orange'}
+                                >
+                                    {LIVE_STATUS_TEXT[liveStatus]}
+                                </Tag>
                             </div>
                         )}
                         { fetching && <CVATLoadingSpinner /> }
@@ -94,7 +113,7 @@ function LabelCountsPage(): JSX.Element {
                                 status='error'
                                 title='Could not load label counts'
                                 subTitle={error instanceof ServerError ? error.message : UNREACHABLE_SERVER_MESSAGE}
-                                extra={<Button type='primary' onClick={fetchData}>Retry</Button>}
+                                extra={<Button type='primary' onClick={() => fetchData()}>Retry</Button>}
                             />
                         )}
                         { !fetching && labelCounts && labelCounts.total === 0 && (
