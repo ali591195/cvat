@@ -474,6 +474,11 @@ export interface SerializedLabelCounts {
     }[];
 }
 
+export interface SerializedLabelCountsLiveTicket {
+    ticket: string;
+    expires_in: number;
+}
+
 export interface SerializedJobValidationLayout {
     honeypot_count?: number;
     honeypot_frames?: number[];

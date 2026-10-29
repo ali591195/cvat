@@ -435,6 +435,10 @@ function build(): CVATCore {
                     const result = await PluginRegistry.apiWrapper(cvat.analytics.labelCounts.get, filter);
                     return result;
                 },
+                async liveTicket(filter) {
+                    const result = await PluginRegistry.apiWrapper(cvat.analytics.labelCounts.liveTicket, filter);
+                    return result;
+                },
             },
             quality: {
                 async reports(filter = {}, aggregate = false) {

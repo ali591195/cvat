@@ -56,7 +56,7 @@ import {
     ArgumentError, DataError, Exception, ScriptingError, ServerError,
 } from './exceptions';
 import { PaginatedResource } from './core-types';
-import { SerializedLabelCounts } from './server-response-types';
+import { SerializedLabelCounts, SerializedLabelCountsLiveTicket } from './server-response-types';
 import { observe } from './capabilities';
 
 export default interface CVATCore {
@@ -181,6 +181,7 @@ export default interface CVATCore {
     analytics: {
         labelCounts: {
             get: (filter: { taskID: number; jobID?: number }) => Promise<SerializedLabelCounts>;
+            liveTicket: (filter: { taskID: number }) => Promise<SerializedLabelCountsLiveTicket>;
         };
         quality: {
             reports: (filter: QualityReportsFilter, aggregate?: boolean) => Promise<PaginatedResource<QualityReport>>;

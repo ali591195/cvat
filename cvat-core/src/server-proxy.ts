@@ -18,6 +18,7 @@ import {
     SerializedInvitationData, SerializedCloudStorage, SerializedFramesMetaData, SerializedCollection,
     SerializedRequest, SerializedJobValidationLayout, SerializedTaskValidationLayout, SerializedConsensusSettingsData,
     SerializedApiToken, SerializedUserGrowthData, SerializedLabelCounts,
+    SerializedLabelCountsLiveTicket,
 } from './server-response-types';
 import {
     SerializedQualityConflictData, SerializedQualityReportData,
@@ -2571,6 +2572,17 @@ async function getLabelCounts(params: { task_id: number; job_id?: number }): Pro
     }
 }
 
+async function getLabelCountsLiveTicket(params: { task_id: number }): Promise<SerializedLabelCountsLiveTicket> {
+    const { backendAPI } = config;
+
+    try {
+        const response = await Axios.get(`${backendAPI}/label-counts/live-ticket`, { params });
+        return response.data;
+    } catch (errorData) {
+        throw generateError(errorData);
+    }
+}
+
 async function updateQualitySettings(
     settingsID: number,
     settingsData: SerializedQualitySettingsSaveData,
@@ -2925,6 +2937,7 @@ export default Object.freeze({
     analytics: Object.freeze({
         labelCounts: Object.freeze({
             get: getLabelCounts,
+            liveTicket: getLabelCountsLiveTicket,
         }),
         quality: Object.freeze({
             reports: getQualityReports,

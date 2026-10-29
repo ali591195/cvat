@@ -610,6 +610,16 @@ export default function implementAPI(cvat: CVATCore): CVATCore {
         const params = fieldsToSnakeCase(filter) as Parameters<typeof serverProxy.analytics.labelCounts.get>[0];
         return serverProxy.analytics.labelCounts.get(params);
     });
+    implementationMixin(cvat.analytics.labelCounts.liveTicket, async (
+        filter: Parameters<CVATCore['analytics']['labelCounts']['liveTicket']>[0],
+    ) => {
+        checkFilter(filter, { taskID: isInteger });
+
+        const params = fieldsToSnakeCase(filter) as Parameters<
+            typeof serverProxy.analytics.labelCounts.liveTicket
+        >[0];
+        return serverProxy.analytics.labelCounts.liveTicket(params);
+    });
     implementationMixin(cvat.analytics.events.export, async (
         filter: AnalyticsEventsFilter,
     ): ReturnType<CVATCore['analytics']['events']['export']> => {
